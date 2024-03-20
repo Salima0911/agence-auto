@@ -3,4 +3,8 @@
         "App\\": "src/",
         "Config\\": "config/"
     }
-}}
+},
+    "require": {
+        "dompdf/dompdf": "^2.0"
+    }
+}

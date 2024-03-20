@@ -108,58 +108,55 @@ class Vehicule
     }
 
 
-    public function save() : void
+    public function save(): void
     {
         $pdo = Db::getConnection();
         $sql = "INSERT INTO vehicule (id,marque,modele,annee) VALUES (?,?,?,?) ";
         $statement = $pdo->prepare($sql);
         $statement->execute([$this->id, $this->marque, $this->modele, $this->annee]);
     }
-
-
     public function update(): void
-
     {
         $pdo = Db::getConnection();
-        $sql = 'UPDATE vehicule SET marque =?, modele=?, annee =? WHERE id=?';
+        $sql = 'UPDATE vehicule SET marque= ?,modele = ? ,annee = ? WHERE id = ?';
         $statement = $pdo->prepare($sql);
-        $statement->execute([$this->id, $this->marque, $this->modele, $this->annee, $this->id]);
+        $statement->execute([$this->marque, $this->modele, $this->annee, $this->id]);
     }
-    public function delete($id) :void
+
+    static function delete($id): void
     {
         $pdo = Db::getConnection();
-        $sql = 'DELETE FROM vehicule WHERE id=?';
+        $sql = 'DELETE FROM vehicule WHERE id = ?';
         $statement = $pdo->prepare($sql);
         $statement->execute([$id]);
     }
-    public function getById($id) :object
+    static function getById($id): object
     {
         $pdo = Db::getConnection();
-        $sql = 'SELECT *FROM  vehicule WHERE id=?';
+        $sql = 'SELECT * FROM vehicule WHERE id = ?';
         $statement = $pdo->prepare($sql);
         $statement->execute([$id]);
         $row = $statement->fetch(PDO::FETCH_ASSOC);
-        if($row){
-            return new Vehicule($row['id'],$row['marque'],$row['modele'], $row['annee']);
-        }else{
+        if ($row) {
+            return new Vehicule($row['id'], $row['marque'], $row['modele'], $row['annee']);
+        } else {
             return null;
-
         }
     }
-    public function getAll():array
+    static function getAll(): array
     {
         $pdo = Db::getConnection();
-        $sql = 'SELECT FROM  vehicule ';
+        $sql = 'SELECT * FROM vehicule';
         $statement = $pdo->prepare($sql);
         $statement->execute();
-        $vehicules = $statement->fetchAll(PDO::FETCH_ASSOC);
-        foreach($vehicules as $row){
-            $vehicule =new Vehicule($row['id'],$row['marque'],$row['modele'], $row['annee']);
+        $dbVehicules = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $vehicules=[];
+
+        foreach ($dbVehicules as $row) {
+            $vehicule = new Vehicule($row['id'], $row['marque'], $row['modele'], $row['annee']);
             $vehicules[] = $vehicule;
         }
-       
-            return $vehicules;
 
-        }
-    
+        return $vehicules;
+    }
 }
